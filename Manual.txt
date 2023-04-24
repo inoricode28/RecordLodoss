@@ -1,1 +1,9 @@
-Mi primer Manual
+Mi primer Manual de GIT
+
+-git clone https://github.com/inoricode28/RecordLodoss.git
+-git log --> revisa los regitros historicos
+-git status --> El estado de la estacion
+-git add .  --> añadir todo los archivos
+-git commit -m "viaje" --> el registro historico
+-git push origin main --> subir al servidor
+-git pull origin main --> actualizar
