@@ -7,3 +7,19 @@ Mi primer Manual de GIT
 -git commit -m "viaje" --> el registro historico
 -git push origin main --> subir al servidor
 -git pull origin main --> actualizar
+
+Mis Lineas de comando de Linux
+
+-mkdir --> crear directorio
+-ls --> listar directorios
+-rm -R linux --> eliminar directorios, con todos su contenido
+-touch Manual.txt --> crear archivos o ficheros
+-cd --> cambiar directorio
+-cd .. --> salir del directorio actual
+-nano --> es un editor de texto en linux
+
+
+
+
+
+
