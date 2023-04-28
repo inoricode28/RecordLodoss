@@ -1,0 +1,50 @@
+-La terminal a usar es el Cmder
+-Para registrar el cmder en windows
+.\Cmder.exe /REGISTER ALL
+---------------------------------
+mkdir = crear directorio
+cd = cambiar directorio
+ls = listar
+touch ejer01.py = crear un archivo
+code . = abre el visual code con el archivo
+cat = ver el contenido de un archivo de texto
+
+***********************************
+virtual python
+***********************************
+py -m venv venv
+alias avenv=.\venv\Scripts\activate
+para activarlo escribe "avenv"
+python.exe -m pip install --upgrade pip
+-----------------------------------
+
+***********************************
+Librerias en python
+***********************************
+
+-Para instalar una libreria debes usar el siguiente comando.
+pip install pygame #pygame es la libreria
+pip install PyQt5 # para instalar interfas Grafica
+pip install pyautogui
+
+-Para ver las librerias en virtual
+pip freeze
+
+-Para grabar las librerias en una lista
+pip freeze > requirements.txt
+
+-Para instalar las librerias de una lista      
+pip install -r requirements.txt
+
+----------------------------------
+============================
+Codigo de Configuracion Para el Cmder en visual code
+============================ 
+####setting.json de editor.fonLigatures
+"terminal.integrated.profiles.windows": {
+  "cmder": {
+    "path": "C:\\WINDOWS\\System32\\cmd.exe",
+    "args": ["/K", "C:\\cmder\\vendor\\bin\\vscode_init.cmd"]
+  }
+},
+"terminal.integrated.defaultProfile.windows": "cmder"

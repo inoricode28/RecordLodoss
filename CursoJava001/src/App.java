@@ -4,8 +4,7 @@ public class App {
     public static void main(String[] args) throws Exception {
         String nom, nom1;
         int n1,num;
-        char Ca;
-        
+        char Ca;        
         
         // Crear el Obejto Scanner luego de importar y le asignamos el nombre que deseamos
         Scanner entrada=new Scanner(System.in);
