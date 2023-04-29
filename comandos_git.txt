@@ -48,3 +48,13 @@ git branch -r (ves todas las ramas)
 alias arbolito="git log --all --graph --decorate --oneline"
 git config --global alias.stats "shortlog -sn --all --no-merges"
 para ejecutarlo es git stats
+
+/////////////////////////////////////////////////////
+/////////////////////////////////////////////////////
+Variables de entorno
+alias estado="git status"
+alias agregar="git add ."
+alias viaje="git commit -m"
+////////////////////////////git log
+alias subir="git push origin main"
+alias actualizar="git pull origin main"
