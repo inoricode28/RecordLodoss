@@ -1,0 +1,1290 @@
+Recursos web:
+https://www.asterisk.org/
+
+Primero entraremos en modo root
+ su - root
+ usuario: nova
+ pass: root
+ --------------------------------------------
+ --------------------------------------------
+ Recursos para trabajar con VSCODE
+ Deseamos trabajar con VSCODE y el SERVIDOR EN REMOTO
+ Instalar:
+ 
+Remote - SSH
+https://www.youtube.com/watch?v=0024IN0W5BU
+https://diarioprogramador.com/conectar-a-un-servidor-por-ssh-desde-visual-studio-code/
+
+liberar el root para conexcion SSH
+https://www.youtube.com/watch?v=rN-AfLIo-KQ&t=103s
+-->nano /etc/ssh/sshd_config
+descomentar:
+PermiyRootLogin yes
+
+Arch
+-->systemctl restart sshd 
+
+Debian
+--> service ssh restart
+
+
+
+Extencion de VSCODE:
+Asterisk Syntax Highlighter
+
+
+Entrar a la carpeta donde se instalara los archivos previos
+--> cd /usr/src
+esta es la carpeta donde se instalara
+
+Descargar los archivos a trabajar
+Instalar primero wget
+--> apt install wget
+--------------------------------------------
+--> wget https://downloads.asterisk.org/pub/telephony/libpri/libpri-current.tar.gz
+--> wget https://downloads.asterisk.org/pub/telephony/dahdi-linux-complete/dahdi-linux-complete-current.tar.gz
+--> wget https://downloads.asterisk.org/pub/telephony/asterisk/asterisk-18-current.tar.gz
+
+Previos:
+Instalara los headers
+apt install linux-headers-$(uname -r)
+
+Hay que descomprimir los archivos descargados
+
+--> tar -zxvf asterisk-18-current.tar.gz
+--> tar -zxvf libpri-current.tar.gz
+--> tar -zxvf dahdi-linux-complete-current.tar.gz
+
+Luego dirigirse ala carpeta descomprimida asterisk
+de ahi ala carpeta contrib, y luego a scripts
+ ahora instalar el prereq
+ --> ./install_prereq install
+ --> saldra una mensaje de color azul el cual pondras el numero 51
+
+ -------------------------------------------------------------
+ nos dirigimos ala carpeta dahdi
+--> make
+--> make install
+ nos dirigimos a la carpera libpri
+--> make
+--> make install
+
+nos dirigimos ala carpeta asterisk
+
+--> ./configure
+Nota: cuando todo este bien saldra un simbolo de asterisco.
+
+--> make menuselect
+nota: hacer click en exit
+
+--> make
+--> make install
+-->make samples
+-->make config
+---------------------------------------
+para llamar al asterisk en modo root
+
+--> asterisk -rv
+nota primero ejecuten asterisk -v y loego el asterisk-rv
+-------------------------------------------
+Nota: para levantar el asterisk debes tener el sudo instalado
+--> apt install sudo
+ nano /etc/sudoers
+-------------------------------------------
+Ahora configuraremos sip
+--> cd /etc/asterisk/
+--> nano modules.conf
+nota: los nuevos asterisk cargan normalmente con el pjsip, pero trabajaremos con sip.
+
+Ejemplo:
+noload => chan_sip.so
+
+esto viene en el archivo module.conf
+
+solucion:
+;noload => chan_sip.so
+noload => chan_pjsip.so
+
+luego guardamos con ctrl+x sumado a un yes, y luego un enter
+---------------------------------------------------------------
+luego debemos reiniciar el servidor debian
+--> init 6
+
+Iremos a instalar los SoftPhone
+https://www.3cx.es/voip-telefono/softphone/
+https://www.microsip.org/downloads
+
+---------------------------------------
+Mover el sip.conf
+--> mv sip.conf sip.conf.bak
+--> nano sip.conf
+Abrira el nano y escribiremos en el
+Nota: los nexos no necesariamente un numero sino tambien puede ser un nombre
+
+[general]
+
+[200]
+type = friend
+host = dynamic
+secret = 1234
+context = prueba
+disallow = all
+allow = all
+
+[201]
+type = friend
+host = dynamic
+secret = 1234
+context = prueba
+disallow = all
+allow = all
+
+[202]
+type = friend
+host = dynamic
+secret = 1234
+context = prueba
+disallow = all
+allow = all
+
+[203]
+type = friend
+host = dynamic
+secret = 1234
+context = prueba
+disallow = all
+allow = all
+
+guardar: ctrl+x luego Y, y luego enter
+--------------------------------------
+debian*CLI> sip show peers
+Nota no se vera por que no esta cargado
+
+debian*CLI> sip reload
+Reloading SIP
+NOta: ya cargo los que guardamos
+
+debian*CLI> sip show peers
+Nota: se veran todos los anexos
+-----------------------------------------
+debemos estare en modo root en la carpeta /etc/asterisk/
+-->nano extensions.conf
+--> mv extensions.conf extensions.conf.bak
+--> nano extensions.conf
+nota: exten => numero_marcado,priodidad,Aplicacion
+nota: el cometario es con " ; "
+
+[general]
+[contexto1]
+[contexto2]
+[prueba]
+;exten => numero_marcado,priodidad,Aplicacion
+;Answer, Hangup, Playback
+
+[contexto10]
+
+nota: debes guardar, ctrl+x y luego yes, por ultimo enter
+--------------------------------------------------------
+--> asterisk -rv
+
+debian*CLI> core show application Answer
+
+debian*CLI> core show application Dial
+
+debian*CLI> core show application Hangup
+
+debian*CLI> core show application Playback
+
+Nota: salir del asterisk
+------------------------------------------------------------
+volver al archivo extersions.conf
+[general]
+[contexto1]
+[contexto2]
+[prueba]
+;exten => numero_marcado,priodidad,Aplicacion
+;Answer, Hangup, Playback
+exten => 500,1,Answer()
+exten => 500,2,Playback(demo-congrats)
+exten => 500,3,Hangup()
+[contexto10]
+
+Nota: guardamos,Ctrl+x luego yes, enter
+una ves guardado debemos cargarlo
+
+--> asterisk -rv
+debian*CLI> dialplan reload
+nota:llamar desde el softPhone
+--------------------------------------
+
+
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: hay que seguir con el extersions.conf
+--> nano extensions.conf
+
+[general]
+[contexto1]
+[contexto2]
+[prueba]
+;exten => numero_marcado,priodidad,Aplicacion
+;Answer, Hangup, Playback
+exten => 500,1,Answer()
+   same => n,Playback(demo-congrats)
+   same => n,Hangup()
+
+[contexto10]
+
+Nota: guardamos,Ctrl+x luego yes, enter
+una ves guardado debemos cargarlo
+
+--> asterisk -rv
+debian*CLI> dialplan reload
+nota:llamar desde el softPhone
+--------------------------------------------
+nota: donde si ubican los audios en asterisk
+cd /var/lib/asterisk/sounds
+hello-world.gsm
+demo-congrats.gsm
+--------------------------------------------
+Dial
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: hay que seguir con el extersions.conf
+--> nano extensions.conf
+
+[general]
+[contexto1]
+[contexto2]
+[prueba]
+;exten => numero_marcado,priodidad,Aplicacion
+;Answer, Hangup, Playback
+exten => 500,1,Answer()
+   same => n,Playback(demo-congrats)
+   same => n,Hangup()
+
+;Dial(canal,timeout,opciones,URI)
+exten => 200,1,Dial(SIP/200,10)
+exten => 200,2,Dial(SIP/200,10)
+exten => 201,3,Playback(hello-world)
+exten => 203,4,Hangup()
+
+exten => 201,1,Dial(SIP/201)
+exten => 203,1,Dial(SIP/203)
+[contexto10]
+
+--> asterisk -rv
+debian*CLI> dialplan reload
+nota:llamar desde el softPhone
+---------------------------------------
+Dial
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: hay que seguir con el extersions.conf
+--> nano extensions.conf
+
+[general]
+[contexto1]
+[contexto2]
+[prueba]
+;exten => numero_marcado,priodidad,Aplicacion
+;Answer, Hangup, Playback
+exten => 500,1,Answer()
+   same => n,Playback(demo-congrats)
+   same => n,Hangup()
+
+;Dial(canal,timeout,opciones,URI)
+exten => 200,1,Dial(SIP/200,10,m)
+  same => n,Dial(SIP/200,10)
+  same => n,Playback(hello-world)
+  same => n,Hangup()
+
+exten => 201,1,Dial(SIP/201)
+exten => 203,1,Dial(SIP/203)
+[contexto10]
+
+--> asterisk -rv
+debian*CLI> dialplan reload
+nota:llamar desde el softPhone
+------------------------------------------
+Manejo de aplicaciones Record
+
+--> asterisk -rv
+debian*CLI> core show application Record
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: hay que seguir con el extersions.conf
+--> nano extensions.conf
+
+[general]
+[contexto1]
+[contexto2]
+[prueba]
+;exten => numero_marcado,priodidad,Aplicacion
+;Answer, Hangup, Playback
+exten => 500,1,Answer()
+   same => n,Playback(demo-congrats)
+   same => n,Hangup()
+
+;Dial(canal,timeout,opciones,URI)
+exten => 200,1,Dial(SIP/200,10,m)
+  same => n,Dial(SIP/200,10)
+  same => n,Playback(hello-world)
+  same => n,Hangup()
+
+exten => 201,1,Dial(SIP/201)
+exten => 203,1,Dial(SIP/203)
+
+exten => 808,1,Record(ejemplo.gsm,3)
+exten => 809,1,Answer()
+  same => n,Playback(ejemplo)
+  same => n,Hangup()
+[contexto10]
+
+--> asterisk -rv
+debian*CLI> dialplan reload
+nota:llamar desde el softPhone
+
+--------------------------------------------
+Manejo de las aplicaiones Background,Record y exte
+Answer()
+Hangup()
+Playback(audio)
+Dial()
+Record(audio)
+
+Background(audio)
+WaitExen(tiempo)
+Saydigits(digito)
+
+-----------------------------------------------
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: hay que seguir con el extersions.conf
+--> nano extensions.conf
+
+[general]
+[contexto1]
+[contexto2]
+[prueba]
+;exten => numero_marcado,priodidad,Aplicacion
+;Answer, Hangup, Playback
+exten => 500,1,Answer()
+   same => n,Playback(demo-congrats)
+   same => n,Hangup()
+
+;Dial(canal,timeout,opciones,URI)
+exten => 200,1,Dial(SIP/200,10,m)
+  same => n,Dial(SIP/200,10)
+  same => n,Playback(hello-world)
+  same => n,Hangup()
+
+exten => 201,1,Dial(SIP/201)
+exten => 203,1,Dial(SIP/203)
+
+exten => 808,1,Record(ejemplo.gsm,3)
+exten => 809,1,Answer()
+  same => n,Playback(ejemplo)
+  same => n,Hangup()
+
+
+exten => 501,1,Answer()
+  same => n,Background(demo-congrats)
+  same => n,WaitExten(5)
+
+exten => 1,1,Saydigits(1)
+exten => 3,1,Saydigits(3)
+
+[contexto10]
+
+--> asterisk -rv
+debian*CLI> dialplan reload
+debian*CLI> dialplan show prueba
+#nos permite ver los el contenido
+nota:llamar desde el softPhone
+---------------------------------------------------------------------
+Nota: numeros no valido
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: hay que seguir con el extersions.conf
+--> nano extensions.conf
+
+[general]
+[contexto1]
+[contexto2]
+[prueba]
+;exten => numero_marcado,priodidad,Aplicacion
+;Answer, Hangup, Playback
+exten => 500,1,Answer()
+   same => n,Playback(demo-congrats)
+   same => n,Hangup()
+
+;Dial(canal,timeout,opciones,URI)
+exten => 200,1,Dial(SIP/200,10,m)
+  same => n,Dial(SIP/200,10)
+  same => n,Playback(hello-world)
+  same => n,Hangup()
+
+exten => 201,1,Dial(SIP/201)
+exten => 203,1,Dial(SIP/203)
+
+exten => 808,1,Record(invalido.gsm,3)
+exten => 809,1,Answer()
+  same => n,Playback(invalido)
+  same => n,Hangup()
+
+
+exten => 501,1,Goto(menu,inicio,1)
+
+
+[menu]
+
+exten => inicio,1,Background(ejemplo)
+  same => n,WaitExten(5)
+
+exten => 1,1,Saydigits(1)
+exten => 2,1,Saydigits(2)
+exten => 3,1,Saydigits(3)
+
+exten => i,1,Playback(invalido)
+
+--> asterisk -rv
+debian*CLI> dialplan reload
+debian*CLI> dialplan show prueba
+#nos permite ver los el contenido
+nota:llamar desde el softPhone
+-------------------------------------------------------------------------------
+Nota: tiempo excedido
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: hay que seguir con el extersions.conf
+--> nano extensions.conf
+
+[general]
+[contexto1]
+[contexto2]
+[prueba]
+;exten => numero_marcado,priodidad,Aplicacion
+;Answer, Hangup, Playback
+exten => 500,1,Answer()
+   same => n,Playback(demo-congrats)
+   same => n,Hangup()
+
+;Dial(canal,timeout,opciones,URI)
+exten => 200,1,Dial(SIP/200,10,m)
+  same => n,Dial(SIP/200,10)
+  same => n,Playback(hello-world)
+  same => n,Hangup()
+
+exten => 201,1,Dial(SIP/201)
+exten => 203,1,Dial(SIP/203)
+
+exten => 808,1,Record(muchotiempo.gsm,3)
+exten => 809,1,Answer()
+  same => n,Playback(muchotiempo)
+  same => n,Hangup()
+
+
+exten => 501,1,Goto(menu,inicio,1)
+
+
+[menu]
+
+exten => inicio,1,Background(ejemplo)
+  same => n,WaitExten(5)
+
+exten => 1,1,Saydigits(1)
+exten => 2,1,Saydigits(2)
+exten => 3,1,Saydigits(3)
+
+exten => i,1,Playback(invalido)
+exten => t,1,Playback(muchotiempo)
+
+--> asterisk -rv
+debian*CLI> dialplan reload
+debian*CLI> dialplan show prueba
+#nos permite ver los el contenido
+nota:llamar desde el softPhone
+----------------------------------------------------------
+manejo de prefijo en el dialplan
+
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: hay que seguir con el extersions.conf
+--> nano extensions.conf
+
+[general]
+[contexto1]
+[contexto2]
+[prueba]
+;exten => numero_marcado,priodidad,Aplicacion
+;Answer, Hangup, Playback
+exten => 500,1,Answer()
+   same => n,Playback(demo-congrats)
+   same => n,Hangup()
+
+;Dial(canal,timeout,opciones,URI)
+exten => 200,1,Dial(SIP/200,10,m)
+  same => n,Dial(SIP/200,10)
+  same => n,Playback(hello-world)
+  same => n,Hangup()
+
+;A201 es la variable
+;${A201} es el valor de la variable
+;tT tranfiere tanto el originate como el que recibe
+;llamar al 201 en el softPhone
+
+exten => 201,1,Set(A201=SIP/201)
+exten => 201,2,Dial(${A201},40,tT)
+
+exten => 203,1,Dial(SIP/203)
+
+exten => 808,1,Record(muchotiempo.gsm,3)
+exten => 809,1,Answer()
+  same => n,Playback(muchotiempo)
+  same => n,Hangup()
+
+
+exten => 501,1,Goto(menu,inicio,1)
+
+
+[menu]
+
+exten => inicio,1,Background(ejemplo)
+  same => n,WaitExten(5)
+
+exten => 1,1,Saydigits(1)
+exten => 2,1,Saydigits(2)
+exten => 3,1,Saydigits(3)
+
+exten => i,1,Playback(invalido)
+exten => t,1,Playback(muchotiempo)
+
+--> asterisk -rv
+debian*CLI> dialplan reload
+debian*CLI> dialplan show prueba
+#nos permite ver los el contenido
+nota:llamar desde el softPhone
+
+--------------------------------------------------------------------------
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: hay que seguir con el extersions.conf
+--> nano extensions.conf
+
+[general]
+[contexto1]
+[contexto2]
+[prueba]
+;exten => numero_marcado,priodidad,Aplicacion
+;Answer, Hangup, Playback
+exten => 500,1,Answer()
+   same => n,Playback(demo-congrats)
+   same => n,Hangup()
+
+;Dial(canal,timeout,opciones,URI)
+exten => 200,1,Dial(SIP/200,10,m)
+  same => n,Dial(SIP/200,10)
+  same => n,Playback(hello-world)
+  same => n,Hangup()
+
+;A201 es la variable
+;${A201} es el valor de la variable
+;tT tranfiere tanto el originate como el que recibe
+;llamar al 201 en el softPhone
+
+;======Reglas de marcado==========;
+;debemos crear patrones _2XX
+;_2. esto significa cualquier numero que empieze con 2
+;_2[34567]X estos significa que limita con los numero 34567
+;X viene a ser un valor de 0 a 9
+;Z viene a ser un valor de 1 a 9
+;N viene a ser un valor de 2 a 9
+;=================================;
+
+exten => 201,1,Dial(SIP/${EXTEN},40,tT) ;Este es el cambio inicial
+
+;exten => 203,1,Dial(SIP/203);esta comentado para hacer mas pruebas
+
+exten => 808,1,Record(muchotiempo.gsm,3)
+exten => 809,1,Answer()
+  same => n,Playback(muchotiempo)
+  same => n,Hangup()
+
+
+exten => 501,1,Goto(menu,inicio,1)
+
+
+[menu]
+
+exten => inicio,1,Background(ejemplo)
+  same => n,WaitExten(3)
+
+exten => 1,1,Saydigits(1)
+exten => 2,1,Saydigits(2)
+exten => 3,1,Saydigits(3)
+
+exten => i,1,Playback(invalido)
+exten => t,1,Playback(muchotiempo)
+
+--> asterisk -rv
+debian*CLI> dialplan reload
+debian*CLI> dialplan show prueba
+#nos permite ver los el contenido
+nota:llamar desde el softPhone
+
+-----------------------------------------------------------------
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: hay que seguir con el extersions.conf
+--> nano extensions.conf
+
+[general]
+[contexto1]
+[contexto2]
+[prueba]
+;exten => numero_marcado,priodidad,Aplicacion
+;Answer, Hangup, Playback
+exten => 500,1,Answer()
+   same => n,Playback(demo-congrats)
+   same => n,Hangup()
+
+;Dial(canal,timeout,opciones,URI)
+exten => 200,1,Dial(SIP/200,10,m)
+  same => n,Dial(SIP/200,10)
+  same => n,Playback(hello-world)
+  same => n,Hangup()
+
+;A201 es la variable
+;${A201} es el valor de la variable
+;tT tranfiere tanto el originate como el que recibe
+;llamar al 201 en el softPhone
+
+;======Reglas de marcado==========;
+;debemos crear patrones _2XX
+;_2. esto significa cualquier numero que empieze con 2
+;_2[34567]X estos significa que limita con los numero 34567
+;X viene a ser un valor de 0 a 9
+;Z viene a ser un valor de 1 a 9
+;N viene a ser un valor de 2 a 9
+;=================================;
+
+exten => _2XX,1,Dial(SIP/${EXTEN},40,tT) ;Este es el cambio secundario
+
+;exten => 203,1,Dial(SIP/203);esta comentado para hacer mas pruebas
+
+exten => 808,1,Record(muchotiempo.gsm,3)
+exten => 809,1,Answer()
+  same => n,Playback(muchotiempo)
+  same => n,Hangup()
+
+
+exten => 501,1,Goto(menu,inicio,1)
+
+
+[menu]
+
+exten => inicio,1,Background(ejemplo)
+  same => n,WaitExten(3)
+
+exten => 1,1,Saydigits(1)
+exten => 2,1,Saydigits(2)
+exten => 3,1,Saydigits(3)
+
+exten => i,1,Playback(invalido)
+exten => t,1,Playback(muchotiempo)
+
+--> asterisk -rv
+debian*CLI> dialplan reload
+debian*CLI> dialplan show prueba
+#nos permite ver los el contenido
+nota:llamar desde el softPhone
+
+--------------------------------------------------------
+23: Manejo de VoiceMail
+Nota:Para trabajar con el VoiceMail
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: hay que seguir con el voicemail.conf
+
+;voiceMail(casillabox@contexto)
+;voiceMailMain(casillabox@contexto);
+;Los usuarios son 201, 202, 203
+--> mv voicemail.conf voicemail.conf.bak
+--> nano voicemail.conf
+
+[general]
+format = gsm
+
+[default]
+
+200 => 1234
+201 => 1234
+202 => 1234
+203 => 1234
+
+nota: guardamos con ctrl+x, yes y luego enter
+-----------------------------------------------
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: hay que seguir con el extensions.conf
+--> nano extensions.conf
+
+[general]
+[contexto1]
+[contexto2]
+[prueba]
+;exten => numero_marcado,priodidad,Aplicacion
+;Answer, Hangup, Playback
+exten => 500,1,Answer()
+   same => n,Playback(demo-congrats)
+   same => n,Hangup()
+
+;Dial(canal,timeout,opciones,URI)
+
+exten => 200,1,Dial(SIP/200,10,m)
+;  same => n,Dial(SIP/200,10)
+;  same => n,Playback(hello-world)
+;  same => n,Hangup()
+
+;A201 es la variable
+;${A201} es el valor de la variable
+;tT tranfiere tanto el originate como el que recibe
+;llamar al 201 en el softPhone
+
+;======Reglas de marcado==========;
+;debemos crear patrones _2XX
+;_2. esto significa cualquier numero que empieze con 2
+;_2[34567]X estos significa que limita con los numero 34567
+;X viene a ser un valor de 0 a 9
+;Z viene a ser un valor de 1 a 9
+;N viene a ser un valor de 2 a 9
+;=================================;
+
+exten => _2XX,1,Dial(SIP/${EXTEN},10,tT) ;Este es el cambio secundario
+  same =>n,VoiceMail(${EXTEN});este contexto es del default
+
+;exten => 203,1,Dial(SIP/203);esta comentado para hacer mas pruebas
+
+exten => 808,1,Record(muchotiempo.gsm,3)
+exten => 809,1,Answer()
+  same => n,Playback(muchotiempo)
+  same => n,Hangup()
+
+
+exten => 501,1,Goto(menu,inicio,1)
+
+
+[menu]
+
+exten => inicio,1,Background(ejemplo)
+  same => n,WaitExten(3)
+
+exten => 1,1,Saydigits(1)
+exten => 2,1,Saydigits(2)
+exten => 3,1,Saydigits(3)
+
+exten => i,1,Playback(invalido)
+exten => t,1,Playback(muchotiempo)
+
+--> asterisk -rv
+debian*CLI> dialplan reload
+debian*CLI> voicemail reload
+#nos permite actualizar el contenido
+nota:llamar desde el softPhone
+nota: para ver el flujo de la llamada
+debian*CLI> core set verbose 3
+
+---------------------------------------------------------
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: hay que seguir con el extensions.conf
+--> nano extensions.conf
+
+[general]
+[contexto1]
+[contexto2]
+[prueba]
+;exten => numero_marcado,priodidad,Aplicacion
+;Answer, Hangup, Playback
+exten => 500,1,Answer()
+   same => n,Playback(demo-congrats)
+   same => n,Hangup()
+
+;Dial(canal,timeout,opciones,URI)
+
+exten => 200,1,Dial(SIP/200,10,m)
+;  same => n,Dial(SIP/200,10)
+;  same => n,Playback(hello-world)
+;  same => n,Hangup()
+
+;A201 es la variable
+;${A201} es el valor de la variable
+;tT tranfiere tanto el originate como el que recibe
+;llamar al 201 en el softPhone
+
+;======Reglas de marcado==========;
+;debemos crear patrones _2XX
+;_2. esto significa cualquier numero que empieze con 2
+;_2[34567]X estos significa que limita con los numero 34567
+;X viene a ser un valor de 0 a 9
+;Z viene a ser un valor de 1 a 9
+;N viene a ser un valor de 2 a 9
+;=================================;
+
+exten => _2XX,1,Dial(SIP/${EXTEN},10,tT) ;Este es el cambio secundario
+  same =>n,VoiceMail(${EXTEN});este contexto es del default
+
+;exten => 203,1,Dial(SIP/203);esta comentado para hacer mas pruebas
+
+exten => 18,1,VoiceMailMain(${CALLERID(num)}) ;esta es la modificacion
+exten => 808,1,Record(muchotiempo.gsm,3)
+exten => 809,1,Answer()
+  same => n,Playback(muchotiempo)
+  same => n,Hangup()
+
+
+exten => 501,1,Goto(menu,inicio,1)
+
+
+[menu]
+
+exten => inicio,1,Background(ejemplo)
+  same => n,WaitExten(3)
+
+exten => 1,1,Saydigits(1)
+exten => 2,1,Saydigits(2)
+exten => 3,1,Saydigits(3)
+
+exten => i,1,Playback(invalido)
+exten => t,1,Playback(muchotiempo)
+
+--> asterisk -rv
+debian*CLI> dialplan reload
+debian*CLI> voicemail reload
+#nos permite actualizar el contenido
+nota:llamar desde el softPhone
+nota: para revisar los manuales
+debian*CLI> core show application VoiceMail
+debian*CLI> core show application VoiceMailMain
+-----------------------------------------------------------------------------------
+24: Descripcion de Troncales
+
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: hay que seguir con el sip.conf
+--> nano sip.conf
+
+[general]
+
+[200]
+type = friend
+host = dynamic
+secret = 1234
+context = prueba
+disallow = all
+allow = all
+
+[201]
+type = friend
+host = dynamic
+secret = 1234
+context = prueba
+disallow = all
+allow = all
+
+[202]
+type = friend
+host = dynamic
+secret = 1234
+context = prueba
+disallow = all
+allow = all
+
+[203]
+type = friend
+host = dynamic
+secret = 1234
+context = prueba
+disallow = all
+allow = all
+
+[rpi]
+type = peer
+host = 192.168.1.8 ;modificar segun la otra central
+context = from-rpi
+diasallow=all
+allow=all 
+
+guardar: ctrl+x luego Y, y luego enter
+------------------------------------------------------------
+
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: hay que seguir con el extersions.conf
+--> nano extensions.conf
+
+[general]
+[contexto1]
+[contexto2]
+[prueba]
+;exten => numero_marcado,priodidad,Aplicacion
+;Answer, Hangup, Playback
+exten => 500,1,Answer()
+   same => n,Playback(demo-congrats)
+   same => n,Hangup()
+
+;Dial(canal,timeout,opciones,URI)
+
+exten => 200,1,Dial(SIP/200,10,m)
+;  same => n,Dial(SIP/200,10)
+;  same => n,Playback(hello-world)
+;  same => n,Hangup()
+
+;A201 es la variable
+;${A201} es el valor de la variable
+;tT tranfiere tanto el originate como el que recibe
+;llamar al 201 en el softPhone
+
+;======Reglas de marcado==========;
+;debemos crear patrones _2XX
+;_2. esto significa cualquier numero que empieze con 2
+;_2[34567]X estos significa que limita con los numero 34567
+;X viene a ser un valor de 0 a 9
+;Z viene a ser un valor de 1 a 9
+;N viene a ser un valor de 2 a 9
+;=================================;
+
+exten => _2XX,1,Dial(SIP/${EXTEN},10,tT) ;Este es el cambio secundario
+  same =>n,VoiceMail(${EXTEN});este contexto es del default
+
+exten => _3XX,1,Dial(SIP/rpi/${EXTEN},10,tT) ;este utiliza el canal que creamos en sip.conf 
+
+;exten => 203,1,Dial(SIP/203);esta comentado para hacer mas pruebas
+
+exten => 18,1,VoiceMailMain(${CALLERID(num)}) ;esta es la modificacion
+exten => 808,1,Record(muchotiempo.gsm,3)
+exten => 809,1,Answer()
+  same => n,Playback(muchotiempo)
+  same => n,Hangup()
+
+
+exten => 501,1,Goto(menu,inicio,1)
+
+
+[menu]
+
+exten => inicio,1,Background(ejemplo)
+  same => n,WaitExten(3)
+
+exten => 1,1,Saydigits(1)
+exten => 2,1,Saydigits(2)
+exten => 3,1,Saydigits(3)
+
+exten => i,1,Playback(invalido)
+exten => t,1,Playback(muchotiempo)
+
+[from-rpi]
+exten => _20X,1,Dial(SIP/${EXTEN})
+
+--> asterisk -rv
+debian*CLI> dialplan reload
+debian*CLI> sip reload
+debian*CLI> voicemail reload
+
+#ver el flujo de llamadas
+debian*CLI> core set verbose 3
+#nos permite actualizar el contenido
+nota:llamar desde el softPhone
+nota: para revisar los manuales
+debian*CLI> core show application VoiceMail
+debian*CLI> core show application VoiceMailMain
+
+-------------------------------------------
+DATO IMPORTANTE ESTE ES LA OTRA CENTRAL
+ESTE ES EN LA RASPBERRY PI
+
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: debemos en la nueva centrar convertir en bak a:
+--> mv sip.conf sip.conf.bak
+--> mv extensions.conf extensions.conf.bak
+
+Nota: hay que seguir con el sip.conf
+--> nano sip.conf
+
+[general]
+
+[300]
+type=friend
+secret=1234
+host=dynamic
+context=prueba2
+disallow=all
+allow=all
+
+[301]
+type=friend
+secret=1234
+host=dynamic
+context=prueba2
+disallow=all
+allow=all
+
+[302]
+type=friend
+secret=1234
+host=dynamic
+context=prueba2
+disallow=all
+allow=all
+
+[debian]
+type=peer
+host=192.168.1.10 ;Esto debe modificarse segun la ip de la otra centrar
+context = from-debian
+disallow=all
+allow=all ;si falla ponle ulaw
+
+nota:guardar
+
+------------------------------------------------------------------------------
+SEGUIMOS ESTANDO EN LA RASPBERRY
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: hay que seguir con el extersions.conf
+--> nano extensions.conf
+
+[general]
+
+[prueba2]
+exten => _3XX,1,Dial(SIP/${EXTEN})
+exten => _2XX,1,Dial(SIP/debian/${EXTEN})
+
+[from-debian]
+exten => _3XX,1,Dial(SIP/${EXTEN})
+
+Nota: modificar los softphone ala raspberry
+video 4 , minutos 43:06
+finde la troncal
+----------------------------------------------------------------------
+ESTE NO VA EN EL RPI, SINO EN EL DEBIAN
+troncal avanzados tipo IAX
+
+debemos estare en modo root en la carpeta /etc/asterisk/
+Nota: debemos en la nueva centrar convertir en bak a:
+--> mv iax.conf iax.conf.bak
+--> nano
+
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+-------------------------------------------------------------------
+
+Intalaremos la base de datos:
+La base de datos es con mariaDB Server
+
+Debemos actualizar primero el sistema con el comando:
+
+-->apt-get update
+
+una vez actualizado, deberan instalar el porgrama de base de datos
+
+--> apt-get install mariadb-server
+
+para ingresar ala base de datos es:
+
+-->mysql -u root
+
+MariaDB[(none)]> CREATE USER 'nova'@'%' IDENTIFIED BY '1234';
+Query OK, 0 rows affected (0.000 sec)
+
+MariaDB[(none)]> GRANT ALL PRIVILEGES ON *.* TO 'nova'@'%';
+Query OK, 0 rows affected (0.000 sec)
+
+NOTA: El porcentaje es para que el usario pueda entrar desde cualquier lugar
+
+debemos ingresar al directorio: 
+--> cd /etc/mysql/mariadb.conf.d/
+--> nano 50-server.cnf
+
+buscamos en el archivo para poder remotear desde cualquier lado:
+
+bind-address          = 0.0.0.0
+
+debemos reiniciar una vez que pusimos la ip
+
+--> /etc/init.d/mysql stop
+mysql.service.
+
+-->/etc/init.d/mysql start
+mysql.service.
+---------------------------------------------------------------
+instalar el DBeaver
+seguire el video de instalacion del manual
+
+https://dbeaver.io/download/
+
+Establecer una nueva conexcion
+
+instalar el odbc
+apt-get install unixodbc
+
+una vez establecida la conecxion 
+instalar en el servidor nova
+--> apt-get install unixodbc
+-->apt-get install git cmake
+
+nos dirigimos ala carpeta
+
+
+
+
+
+
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+------------------------------------------------------------------------
+Ami
+Configurar el Ami:
+/etc/asterisk/manager.conf
+
+--> mv manager.conf manager.conf.bak
+--> nano manager.conf
+Puerto que trabaja por defecto 5038
+[general]
+enable=yes
+webenable=no
+bindaadr=0.0.0.0
+
+[nova]
+secret=1234
+read=all
+write=all
+
+--> asterisk -rv
+--> reload
+--> manager show users
+--> manager show command Login
+Nota: para conectarte al manager debes ejecutar el siguiente comando
+-->apt-get install telnet
+--> telnet 192.168.1.11 5038
+
+//////escribir rapido
+--Asterisk Call Manager/6.0.0
+--->Action: Login
+--->Username: inori
+--->Secret: 1234
+---> ponen un enter
+
+///Response: Success
+Logramos acceder
+
+Nos dirigimos al asterisk y escribimos
+manager show connected
+
+Nota: para salir, una ves que ingresaste al manager se ejecuta
+-->Action: Logoff
+
+--------------------------------------------------------------
+--------------------------------------------------------------
+--> telnet 192.168.1.11 5038
+
+//////escribir rapido
+--Asterisk Call Manager/6.0.0
+--->Action: Login
+--->Username: inori
+--->Secret: 1234
+---> ponen un enter
+
+///Response: Success
+Logramos acceder
+
+Ejecucion del manager externamente
+-->Action: Ping
+-->Action: Reload
+-------------------------------------------------
+dentro de extensions.conf
+esto se ejecuta en un manager externo
+
+Action: Originate
+Channel: SIP/200
+Context: Prueba
+Exten: 445
+Priority: 1
+--------------------------------------------------
+Asterisk AMI
+https://pypi.org/project/asterisk-ami/
+-->pip install asterisk-ami
+
+
+---------------------------------------------------
+Asterisck AGI
+Asterisk GateWay Interface --> Cede el control
+dentro de extensions.conf
+
+extem=>444,n,AGI(Archivo,arg1,arg2,arg3,...)
+
+archivo ubicado en /var/lib/asterisk/agi-bin/
+Archivo con permisos...#chmod 777 archivo
+
+
+[prueba]
+exten => 444,1,AGI(test.py)
+----------------------------------------------
+nota: dirigirse a la ruta:
+cd /var/lib/asterisk/agi-bin/
+ls
+nano test.py
+dentro del archivo
+
+#!/usr/bin/python3
+
+import sys
+sys.stdout.write('VERBOSE "Hola Soy Python"\n')
+sys.stdout.flush()
+-----------------------------------------------
+En el programa Asterisk hay que hacer una actualizacion al Dialplan reload
+
+nota: hay que darle permisos de ejecucion
+--->chmod 777 test.py
+entramos al asterisk y desde un telefono llamamos al 444
+
+---------------------------------------------------------------------------------------
+vamos a modificar una vez mas el archivo
+
+nota: dirigirse a la ruta:
+cd /var/lib/asterisk/agi-bin/
+ls
+nano test.py
+dentro del archivo
+
+#!/usr/bin/python3
+
+import sys
+sys.stdout.write('ANSWER\n')
+sys.stdout.flush()
+sys.stdout.write('VERBOSE "Hola Soy Python"\n')
+sys.stdout.flush()
+-------------------------------------------------------------------------------------------
+[prueba]
+exten => 444,1,AGI(test.py)
+exten => 444,2,Hangup()
+
+nota depeus de modificar dentro de extensions.conf
+
+En el asterisk hacer:
+debian*CLI> dialplan reload
+
+-------------------------------------------------------------------------------------------
+vamos a modificar una vez mas el archivo
+
+nota: dirigirse a la ruta:
+cd /var/lib/asterisk/agi-bin/
+ls
+nano test.py
+dentro del archivo
+
+#!/usr/bin/python3
+
+import sys
+sys.stdout.write('ANSWER\n')
+sys.stdout.flush()
+sys.stdout.write('VERBOSE "Hola Soy Python"\n')
+sys.stdout.flush()
+sys.stdout.write('SAY ALPHA "Hola" ""\n')
+sys.stdout.flush()
+sys.stdout.write('SAY DIGITS 4321 ""\n')
+sys.stdout.flush()
+
+------------------------------------------------------------------------
+
+video 6 48
+
+
+/var/lib/asterisk/sounds/ <--
+/usr/share/asterisk/sounds
+
+
