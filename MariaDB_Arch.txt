@@ -1,0 +1,39 @@
+Para configurar Maria DB en Arch Linux
+El Maria DB ya viene instalado por defecto en Arch Linux
+
+las configuraciones se hacen desde el root asi que entraremos en modo root
+--> su - root
+--> sudo su
+
+cualquiera de los ingresa al super usuario
+una ves estems en root
+
+ahora ingresaremos al mysql
+--> mysql -u root
+una ves adentro escribiremos lso siguientes comandos
+
+MariaDB[(none)]> CREATE USER 'nova'@'%' IDENTIFIED BY '1234';
+Query OK, 0 rows affected (0.000 sec)
+
+MariaDB[(none)]> GRANT ALL PRIVILEGES ON *.* TO 'nova'@'%';
+Query OK, 0 rows affected (0.000 sec)
+
+NOTA: El porcentaje es para que el usuario pueda entrar desde cualquier lugar
+
+NOTA: Deberemos buscar una carpeta en especifico para liberar la conexcionews externas
+
+debemos ingresar al directorio: 
+--> nano /etc/my.cnf.d/server.cnf
+buscamos en el archivo para poder remotear desde cualquier lado
+configuraremos este archivo
+y en la liena 28 a 30 buscar la siguiente sentencia
+
+#bind-address=0.0.0.0
+
+hay que quitarle el michi ("#")
+
+debemos reiniciar el servicios de mysql una vez que pusimos la ip
+
+--> systemctl restart mysql.service
+--> systemctl stop mysqld.service
+--> systemctl start mysqld.service
