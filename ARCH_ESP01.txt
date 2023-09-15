@@ -1,0 +1,314 @@
+Configuracion de ESP01
+AT
+//Saldra un OK
+
+AT+GMR
+Te dara la version de Firmware
+
+El módulo ESP-01 generalmente se configura mediante comandos AT a través de un puerto serie (UART).
+Para cambiar la velocidad de baudios a 9600 bps (bits por segundo), puedes utilizar el siguiente
+comando AT:
+
+AT+UART_DEF=9600,8,1,0,0
+
+Este comando establecerá la velocidad de baudios en 9600 bps, con 8 bits de datos, 1 bit de parada,
+sin paridad y sin control de flujo.
+
+Después de enviar este comando AT, asegúrate de ajustar la velocidad de baudios en tu terminal
+o programa de comunicación serie para que coincida con la nueva velocidad configurada
+(en este caso, 9600 bps). Esto es importante porque, después de cambiar la velocidad de baudios,
+la comunicación UART del ESP-01 operará a esa velocidad y necesitas estar sincronizado con ella
+para enviar y recibir comandos correctamente.
+
+Ten en cuenta que algunos adaptadores USB a UART o puertos serie en computadoras pueden requerir
+reiniciar la comunicación después de cambiar la velocidad de baudios para que la nueva configuración surta efecto.
+
+l módulo ESP8266/ESP-01 no tiene un comando AT específico para mostrar todas las configuraciones en un solo comando. Sin embargo, puedes obtener información sobre las configuraciones actuales enviando varios comandos AT para consultar configuraciones específicas. Aquí hay algunos comandos AT que puedes usar para obtener información sobre las configuraciones:
+
+AT+GMR: Este comando te mostrará la versión del firmware y otra información relacionada con el firmware.
+
+
+AT+GMR
+AT+CWMODE?: Este comando te mostrará el modo de operación Wi-Fi actual (modo STA, modo AP o ambos).
+
+AT+CWMODE?
+AT+CWJAP?: Este comando te mostrará la información sobre la red Wi-Fi a la que está conectado el módulo.
+
+AT+CWJAP?
+AT+CIPSTA?: Este comando te mostrará la configuración de la dirección IP estática si está configurada.
+
+AT+CIPSTA?
+AT+CIPMUX?: Este comando te mostrará el estado de la multiplexación de conexiones.
+
+AT+CIPMUX?
+AT+CIPSERVER?: Este comando te mostrará el estado del servidor TCP/UDP si está configurado.
+
+AT+CIPSERVER?
+AT+CIPSTO?: Este comando te mostrará el tiempo de espera de conexión actual.
+
+AT+CIPSTO?
+AT+UART_DEF?: Este comando te mostrará la configuración UART actual, que incluye la velocidad de baudios.
+
+AT+UART_DEF?
+Deberás enviar estos comandos uno por uno y analizar las respuestas para obtener información sobre la configuración actual del módulo ESP8266/ESP-01.
+
+////////////////////////////////////////////////////
+/////////////////////////////////
+Manual de LInux para configurar puertos de salida
+
+
+Deepin 15.9, una versión anterior del sistema operativo Deepin, generalmente utiliza OpenSSH como la implementación de SSH. Para habilitar y configurar SSH en Deepin, puedes seguir estos pasos:
+
+Verifica si SSH está instalado: Primero, verifica si OpenSSH está instalado en tu sistema. Puedes hacerlo ejecutando el siguiente comando en la terminal:
+
+
+
+dpkg -l | grep openssh-server
+Si obtienes una salida que indica que el paquete openssh-server está instalado, significa que SSH ya está instalado en tu sistema. Si no está instalado, puedes instalarlo con el siguiente comando:
+
+
+
+sudo apt update
+sudo apt install openssh-server
+Inicia el servicio SSH: Una vez instalado, el servicio SSH debería iniciarse automáticamente. Para asegurarte de que esté en ejecución, puedes ejecutar:
+
+
+
+sudo systemctl status ssh
+Si no está en ejecución, puedes iniciar el servicio con:
+
+
+
+sudo systemctl start ssh
+Para habilitar el servicio para que se inicie automáticamente en el arranque, usa:
+
+
+
+sudo systemctl enable ssh
+Configura las reglas del firewall (si es necesario): Si tienes un firewall activado en tu sistema, como UFW (Uncomplicated Firewall), asegúrate de permitir el tráfico SSH. Puedes hacerlo con los siguientes comandos:
+
+
+
+sudo ufw allow OpenSSH
+sudo ufw enable
+Esto permitirá el tráfico SSH a través del firewall.
+
+Accede a tu sistema a través de SSH: Ahora deberías poder acceder a tu sistema a través de SSH desde otro dispositivo en la misma red. Utiliza el siguiente comando desde otro dispositivo para conectarte:
+
+
+
+ssh username@ip_address
+Reemplaza username con tu nombre de usuario en Deepin y ip_address con la dirección IP de tu máquina Deepin.
+
+¡Eso es todo! Ahora tienes SSH habilitado y configurado en Deepin 15.9, y puedes acceder a tu sistema de forma remota de forma segura. Asegúrate de mantener tus credenciales seguras y configurar la autenticación de clave pública si deseas aumentar la seguridad de tu conexión SSH.
+
+////////////////////////////////
+
+Eliminar programas en linux
+
+En Arch Linux, puedes usar el administrador de paquetes pacman para instalar y desinstalar programas. Para eliminar un programa, sigue estos pasos:
+
+Listar paquetes instalados: Primero, puedes listar los paquetes que tienes instalados para encontrar el nombre exacto del programa que deseas eliminar. Puedes usar el comando pacman -Q seguido de una palabra clave o una cadena para buscar programas instalados. Por ejemplo, si deseas eliminar el programa example, puedes buscarlo con:
+
+
+
+pacman -Q | grep example
+Esto te mostrará una lista de paquetes que coincidan con "example" en el nombre.
+
+Desinstalar el programa: Una vez que tengas el nombre exacto del paquete que deseas eliminar, usa el comando pacman -R seguido del nombre del paquete para eliminarlo. Por ejemplo:
+
+
+
+sudo pacman -R nombre_del_paquete
+Donde nombre_del_paquete es el nombre del paquete que deseas eliminar.
+
+También puedes usar la opción -s para eliminar dependencias huérfanas (paquetes que ya no son necesarios por otros paquetes) durante la desinstalación:
+
+
+
+sudo pacman -Rs nombre_del_paquete
+Esto es útil para mantener tu sistema limpio de paquetes innecesarios.
+
+Confirmar la desinstalación: El comando pacman te mostrará una lista de paquetes que se eliminarán y te pedirá confirmación antes de proceder. Asegúrate de revisar esta lista antes de confirmar la eliminación.
+
+Eliminar archivos de configuración (opcional): Si deseas eliminar también los archivos de configuración del programa, puedes agregar la opción --nosave al comando pacman. Esto se vería así:
+
+
+
+sudo pacman -Rns nombre_del_paquete
+Ten en cuenta que esta acción eliminará los archivos de configuración del programa, lo que podría ser útil si deseas realizar una desinstalación limpia. Sin embargo, ten cuidado al usar esta opción, ya que también eliminará cualquier configuración personalizada que hayas realizado.
+
+Después de seguir estos pasos, el programa y sus dependencias deberían eliminarse de tu sistema. Ten en cuenta que debes usar sudo para ejecutar pacman -R, ya que la eliminación de paquetes generalmente requiere privilegios de administrador. Además, ten cuidado al eliminar paquetes, ya que algunos paquetes son esenciales para el funcionamiento del sistema y podrían causar problemas si se eliminan incorrectamente.
+
+//////////////
+Eliminar fast
+
+
+En Arch Linux, puedes utilizar el administrador de paquetes pacman para desinstalar un programa. Aquí te muestro los pasos básicos para desinstalar un programa:
+
+Encontrar el nombre del paquete: Antes de desinstalar un programa, debes conocer el nombre del paquete que deseas eliminar. Puedes listar los paquetes instalados en tu sistema utilizando el comando pacman -Q seguido de una opción de búsqueda. Por ejemplo, si deseas desinstalar un programa llamado "example", puedes buscarlo con:
+
+
+
+pacman -Q | grep example
+Esto te mostrará una lista de paquetes instalados que coincidan con "example" en el nombre.
+
+Desinstalar el paquete: Una vez que sepas el nombre del paquete que deseas eliminar, utiliza el comando pacman -R seguido del nombre del paquete para desinstalarlo. Por ejemplo:
+
+
+
+sudo pacman -R nombre_del_paquete
+Reemplaza nombre_del_paquete con el nombre real del paquete que deseas eliminar.
+
+Si deseas eliminar también las dependencias huérfanas (paquetes que ya no son necesarios por otros paquetes), puedes agregar la opción -s:
+
+
+
+sudo pacman -Rs nombre_del_paquete
+Ten en cuenta que el comando pacman te mostrará una lista de paquetes que se eliminarán y te pedirá confirmación antes de proceder. Asegúrate de revisar esta lista antes de confirmar la eliminación.
+
+Eliminar archivos de configuración (opcional): Si deseas eliminar también los archivos de configuración del programa, puedes agregar la opción --nosave al comando pacman. Esto se vería así:
+
+
+
+sudo pacman -Rns nombre_del_paquete
+Ten en cuenta que esta acción eliminará los archivos de configuración del programa, lo que podría ser útil si deseas realizar una desinstalación limpia. Sin embargo, ten cuidado al usar esta opción, ya que también eliminará cualquier configuración personalizada que hayas realizado.
+
+Una vez que hayas seguido estos pasos, el programa y sus dependencias deberían eliminarse de tu sistema.
+
+Recuerda usar sudo para ejecutar pacman -R, ya que la eliminación de paquetes generalmente requiere privilegios de administrador. Además, ten cuidado al eliminar paquetes, ya que algunos paquetes son esenciales para el funcionamiento del sistema y podrían causar problemas si se eliminan incorrectamente.
+
+
+//////////////////
+Puerto de lectura 
+
+Para enviar comandos AT en picocom 3.1, puedes seguir estos pasos:
+
+Inicia picocom: Abre una terminal y ejecuta picocom con la siguiente sintaxis:
+
+bash
+Copy code
+picocom -b BAUD_RATE DEVICE
+BAUD_RATE es la velocidad de baudios a la que estás configurado para comunicarte con tu dispositivo. Por ejemplo, si tu dispositivo utiliza 9600 baudios, reemplaza BAUD_RATE por 9600.
+
+DEVICE es el nombre del dispositivo serie al que te estás conectando. Por ejemplo, /dev/ttyUSB0 o /dev/ttyS0. Asegúrate de tener permisos para acceder a este dispositivo.
+
+Ejemplo:
+
+bash
+Copy code
+picocom -b 9600 /dev/ttyUSB0
+Envía el comando AT: Una vez que hayas iniciado picocom y estés conectado a tu dispositivo, puedes enviar comandos AT directamente desde la terminal. Simplemente escribe el comando AT y presiona "Enter" para enviarlo.
+
+Por ejemplo, para enviar el comando AT:
+
+Copy code
+AT
+Luego, presiona "Enter". El comando será enviado al dispositivo y deberías recibir una respuesta, que generalmente empieza con "OK" si el comando fue aceptado.
+
+Recibe respuestas y envía más comandos: Puedes recibir respuestas del dispositivo y enviar más comandos AT según sea necesario. Las respuestas del dispositivo se mostrarán en la terminal a medida que las reciba.
+
+Salir de picocom: Para salir de picocom, puedes presionar "Ctrl-a" seguido de "Ctrl-x". Esto te llevará de vuelta al prompt de tu terminal y cerrará la conexión con el dispositivo.
+
+Ten en cuenta que la forma en que los comandos AT y las respuestas se manejan específicamente pueden depender del dispositivo con el que estés trabajando, así que consulta la documentación de tu dispositivo para obtener información detallada sobre los comandos AT compatibles y las respuestas esperadas.
+
+
+
+
+User
+otro programa en arch que me permita ingresa por cli comandos AT
+ChatGPT
+Si buscas una alternativa a picocom para enviar comandos AT desde la línea de comandos en Arch Linux, puedes considerar utilizar el programa minicom. Minicom es una herramienta de comunicación en serie que te permite interactuar con dispositivos serie y enviar comandos AT. Aquí te muestro cómo instalar y usar minicom:
+
+Instala minicom:
+
+Si aún no tienes minicom instalado, puedes instalarlo usando el administrador de paquetes pacman. Ejecuta el siguiente comando en tu terminal:
+
+bash
+Copy code
+sudo pacman -S minicom
+Configura minicom:
+
+Antes de usar minicom, debes configurar la conexión serie. Ejecuta el siguiente comando para configurar minicom:
+
+bash
+Copy code
+sudo minicom -s
+Esto abrirá el menú de configuración de minicom. Aquí, puedes configurar la velocidad de baudios, el puerto serie y otras opciones según las necesidades de tu dispositivo. Asegúrate de seleccionar la configuración adecuada para tu caso y guarda la configuración antes de salir del menú.
+
+Inicia minicom:
+
+Luego de configurar minicom, puedes iniciar la aplicación con el siguiente comando:
+
+bash
+Copy code
+sudo minicom
+Esto abrirá la interfaz de minicom en la que puedes ingresar comandos AT y recibir respuestas de tu dispositivo serie.
+
+Enviar comandos AT:
+
+Una vez que estés en la interfaz de minicom, puedes escribir los comandos AT y enviarlos presionando "Enter". Minicom mostrará las respuestas del dispositivo en la pantalla.
+
+Salir de minicom:
+
+Para salir de minicom y cerrar la conexión, puedes presionar "Ctrl-a" seguido de "x". Esto te llevará de vuelta al prompt de tu terminal.
+
+Minicom es una herramienta versátil que te permite interactuar con dispositivos serie y enviar comandos AT de manera efectiva. Recuerda consultar la documentación de tu dispositivo y asegurarte de configurar minicom correctamente antes de comenzar a enviar comandos AT.
+
+
+
+
+User
+como mecontecto con minicom
+ChatGPT
+Con Minicom, puedes conectarte a dispositivos serie, como módulos GSM o microcontroladores, para enviar y recibir comandos AT u otra información serie. Aquí tienes los pasos básicos para conectarte con Minicom:
+
+Instala Minicom (si no está instalado):
+Asegúrate de que Minicom esté instalado en tu sistema. Puedes instalarlo utilizando el administrador de paquetes de tu distribución de Linux. Por ejemplo, en Arch Linux:
+
+bash
+Copy code
+sudo pacman -S minicom
+En Ubuntu:
+
+bash
+Copy code
+sudo apt-get install minicom
+Identifica el dispositivo serie:
+Antes de abrir Minicom, necesitas saber cuál es el nombre del dispositivo serie al que deseas conectarte. Esto puede ser algo como /dev/ttyUSB0, /dev/ttyS0, o cualquier otro dispositivo serie que estés utilizando. Puedes verificar la lista de dispositivos serie en /dev o consultando la documentación de tu hardware.
+
+Ejecuta Minicom:
+Abre una terminal y ejecuta el siguiente comando para iniciar Minicom:
+
+bash
+Copy code
+sudo minicom -s
+La opción -s te lleva al menú de configuración de Minicom.
+
+Configura Minicom:
+En el menú de configuración de Minicom, realiza los siguientes pasos:
+
+a. Navega a "Serial port setup" y selecciona la configuración del puerto serie que deseas utilizar. Esto incluye la velocidad de baudios (baud rate), bits de datos, paridad, bits de parada, etc. Configura estos valores según las especificaciones de tu dispositivo.
+
+b. Navega a "Screen and keyboard" para configurar el comportamiento de la pantalla y el teclado según tus preferencias.
+
+c. Navega a "Save setup as dfl" y selecciona "Exit" para guardar la configuración como la configuración predeterminada.
+
+Conéctate al dispositivo serie:
+Una vez que hayas configurado Minicom, puedes regresar al terminal y ejecutar:
+
+bash
+Copy code
+sudo minicom
+Esto te llevará a la interfaz de Minicom, donde puedes interactuar con el dispositivo serie.
+
+Enviar comandos AT u otros datos:
+En la interfaz de Minicom, puedes escribir comandos AT u otros datos y presionar "Enter" para enviarlos al dispositivo serie. Minicom mostrará las respuestas o los datos recibidos en la pantalla.
+
+Cerrar la sesión de Minicom:
+Para cerrar Minicom y finalizar la sesión de comunicación, puedes presionar "Ctrl-a" seguido de "x". Esto te llevará de vuelta al terminal.
+
+Minicom es una herramienta útil para interactuar con dispositivos serie a través de la línea de comandos. Asegúrate de configurar correctamente la velocidad de baudios y otros parámetros según las especificaciones de tu dispositivo para una comunicación exitosa.
+
+
+
