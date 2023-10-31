@@ -43,6 +43,23 @@ fdisk -l
 sgdisk --zap-all /dev/sda
 
 
+//////////////////////////////////////////Instalar yay
+
+sudo pacman -Syu
+
+sudo pacman -S git
+
+sudo pacman -S base base-devel --noconfirm
+
+git clone https://aur.archlinux.org/yay.git
+
+cd yay/
+
+makepkg -si
+
+yay --version
+
+
 
 
 -->loadkeys es (teclado español)
