@@ -1,0 +1,229 @@
+Instalacion de Arch Linux
+
+//Agrandar las letras
+/usr/share/kbd/condolefonts
+se instala con setfont ter-228b.psf.gx -v
+
+Activas SSH en la iso de instalacion para hacerlo remotamente
+
+cd /etc/ssh/
+nano ssh_config
+
+-->dentro del nano 
+Agregamos al final una linea que dice:
+
+PermitRootLogin yes
+
+y guadas Ctrl+X y luegos yes
+
+--> Activar el servicio
+systemctl start sshd.service
+
+--> Asignar un contrasenia alk root
+passwd
+y le escribes la contrasenia
+
+--> Averiguar la ip
+ip a
+
+--> Windows Cmder
+ssh root@192.168.1.173
+
+--> ingresas esto al windows
+ssh-keygen -f "C:\\Users\\Nova/.ssh/known_hosts" -R "192.168.1.167"
+
+
+--> ver los efivars en una instalacion limpia
+ls /sys/firmware/efi/efivars
+
+--> revisar las particiones
+fdisk -l
+
+--> Eliminar las particiones
+sgdisk --zap-all /dev/sda
+
+
+
+
+-->loadkeys es (teclado español)
+--> ping archlinux.org
+Nota: para salir de la conexcion es:
+ctrl + c + c
+-->timedatectl set-ntp true
+-->lsblk
+-->cfdisk
+Nota: utilizar solo en la virtual
+la opcion:
+--> "D.O.S" 2014 <---
+--> "G.P.T" 2014 en adelante
+
+--------------------------------
+Particion:
+40GB
+particionar 15GB -- para sistema -->linux
+particionar 4GB -- Memoria SWAP	-->Swap
+particionar 21GB -- Para el HOME -->Linux
+Opciones:
+WRITE-->YES
+QUIT--ENTER
+------------------------------------------
+Formatear las particiones:
+mkfs.ext4 /dev/sda1  -->"15GB"
+mkswap /dev/sda2     -->"4GB"
+swapon /dev/sda2     -->[SWAP]
+mkfs.ext4 /dev/sda3  -->"21GB"
+-------------------------------------------
+Montar Particiones:
+mount /dev/sda1 /mnt
+ls /mnt
+"lost+found" --> no existe el HOME
+mkdir /mnt/home
+mount /dev/sda3 /mnt/home
+--------------------------
+Observar los servidores de Replica
+nano /etc/pacman.d/mirrorlist
+--------------------------
+pacman -Sy archlinux-keyring
+------------------------------
+Instalar el sistema base
+pacstrap /mnt base linux linux-firmware
+--------------------------
+configuracion del sistema
+genfstab -U /mnt >> /mnt/etc/fstab
+nano /mnt/etc/fstab
+------------------------
+Cambiar de la raiz al nuevo sistema
+arch-chroot /mnt
+--------------------------
+zona horaria
+ln -sf /usr/share/zoneinfo/America/Lima /etc/localtime
+ls /usr/share/zoneinfo
+hwclock --systohc
+/////////////////////////
+Instalar nano
+pacman -S nano
+nano /etc/locale.gen
+Nota:
+en_US.UTF-8 UTF-8
+es_PE.UTF-8 UTF-8
+ctrl+x y luegos enter para guardar
+locale-gen #Para que funcione el teclado
+nano /etc/vconsole.conf
+KEYMAP=es
+ctrl+x y enter //para guardar
+///////////////////////
+nombre de la pc hostname
+nano /etc/hostname
+Arch
+ctrl+x y enter para guadar cambios
+///////////////////
+ip de al computadora
+nano /etc/hosts
+127.0.0.1	localhost
+::1		localhost
+127.0.1.1	Arch.localhost Arch
+ctrl+x y enter para guardar cambios
+//////////////////////////////////
+contraseña para la pc
+--> passwd
+Ejemplo:root
+New password: contraseña
+Retype new password: contraseña
+passwd: pasword update successfully
+
+/////////////////////////////
+Instalaremos la red
+pacman -S networkmanager
+habilitar la red
+systemctl enable NetworkManager
+//////////////////////////////
+Instalaremos el gestor de arranque
+pacman -S grub
+grub-install /dev/sda ##-->donde se encuentra el boot
+grub-mkconfig -o /boot/grub/grub.cfg
+cat /etc/passwd
+useradd -m inori
+passwd inori
+Ejemplo:
+New password: contraseña
+Retype new password: contraseña
+-->ls /home/
+"Inori lost+found"
+/////////////////////////
+instalar el super usuario sudo
+pacman -S sudo
+usermod -aG wheel,audio,video,storage inori
+su inori
+ejemplo: [inori@archiso]
+-->groups
+-->exit
+/////////////////////////////
+Habilitar los permisos de super usuario
+nano /etc/sudoers
+## Uncoment to allow menbers of gruop wheel to execute any comman
+%wheel ALL=(ALL)ALL
+ctrl+x y enter para guardar
+-->exit #Salir del sistema y regresar al root
+//////////////////////////////////////
+desmontar las particiones y reiniciar
+umount -R /mnt
+apagar #poweroff
+y sacas el disco o usb del la virtual
+reboot #reiniciar, su todo sale bien habra un menu
+
+////////////////////////////////////////////////////
+///////////////////////////////////////////////////
+Interfas Grafica
+-->sudo pacman -S xorg
+--> sudo !!
+pones las contraseña: root y de ahi Yes a todo
+
+sudo pacman -S plasma-meta kde-applications-meta
+tres veces enter por cada ves que pida y ultimo un yes.
+asi empezara a instalar el KDE(ENTORNO GRAFICO)
+-->systemctl enable sddm
+
+
+-----------------------------------------------
+iw3
+--> sudo pacman -S qtile lightdm
+--> sudo systemctl enable lightdm
+
+Escritorio nuevo de Arch
+
+instalar repositorios
+sudo pacman -S qtile lightdm
+
+Activar lightdm
+sudo systemctl enable lightdm
+
+ls /usr/sher/xsessions/
+
+
+cat /usr/share/xsessions/qtile.desktop
+
+
+Resultado:
+
+[Desktop Entry]
+Name=Qtile
+Comment=Qtile Session
+Exec=qtile start
+Type=Application
+Keywords=wm;tiling
+
+//instalar GTK-GREETER gestor de ventanas
+sudo pacman -S lightdm-gtk-greeter
+
+//Instalar Terminal
+sudo pacman -S xterm
+
+//Dentro de la terminal configurar teclado al español
+
+setxkbmap es
+
+//instalar alacritty
+sudo pacman -S alacritty
+
+
+
