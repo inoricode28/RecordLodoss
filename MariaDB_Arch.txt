@@ -37,3 +37,15 @@ debemos reiniciar el servicios de mysql una vez que pusimos la ip
 --> systemctl restart mysql.service
 --> systemctl stop mysqld.service
 --> systemctl start mysqld.service
+
+
+*ver usuarios en mysql cmder
+	SELECT user, host FROM mysql.user;
+*eliminar usuarios en mysql con privilegios
+	DROP USER 'kenshin'@'%';
+*creacion de super-usuario
+	//ALTER USER 'kenshin'@'localhost' IDENTIFIED WITH mysql_native_password BY 'root';
+	//flush privileges;
+	CREATE USER 'kenshin'@'%' IDENTIFIED BY 'root';
+	GRANT ALL PRIVILEGES ON *.* TO 'kenshin'@'%';
+	FLUSH PRIVILEGES;
