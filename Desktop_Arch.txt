@@ -60,6 +60,81 @@ makepkg -si
 yay --version
 
 
+///Gestor de ejecucion de programas rofi
+sudo pacman -S rofi
+
+//falta sed
+sudo pacman -S sed
+
+sudo pacman -S which
+
+///levatar temas de rofi
+rofi-theme-selector
+
+///intalar feh
+sudo pacman -S feh
+
+///wallpaper
+feh --bg-scale Downloads/arch_linux_wallpaper_by_wavering _radiant_d6ivbsy-fullview.png
+
+///////////////////////
+Audio
+sudo pacman -S pulseaudio
+
+sudo pacman -S pavucontrol
+
+---------------------------
+crear un archivo .xsession
+pegar su codigo
+/////////////////////////////////////
+#!/bin/sh
+
+userresources=$HOME/.Xresources
+usermodmap=$HOME/.Xmodmap
+sysresources=/etc/X11/xinit/.Xresources
+sysmodmap=/etc/X11/xinit/.Xmodmap
+
+# merge in defaults and keymaps
+
+if [ -f $sysresources ]; then
+    xrdb -merge $sysresources
+fi
+
+if [ -f $sysmodmap ]; then
+    xmodmap $sysmodmap
+fi
+
+if [ -f "$userresources" ]; then
+    xrdb -merge "$userresources"
+fi
+
+if [ -f "$usermodmap" ]; then
+    xmodmap "$usermodmap"
+fi
+
+# start some nice programs
+
+if [ -d /etc/X11/xinit/xinitrc.d ] ; then
+ for f in /etc/X11/xinit/xinitrc.d/?*.sh ; do
+  [ -x "$f" ] && . "$f"
+ done
+ unset f
+fi
+
+# Keyboard Layout
+setxkbmap es &
+
+feh --bg-scale Downloads/arch_linux_wallpaper_by_wavering_radiant_d6ivbsy-fullview.png &
+////////////////////////////////////
+
+
+sudo pacman -S xorg-xinit
+
+ ls -la .xsession
+
+//////permision de super usuario
+ chmod u+x .xsession
+
 
 
 -->loadkeys es (teclado español)
