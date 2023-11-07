@@ -1,0 +1,5 @@
+////intalaremos el generador
+sudo npm i -g express-generator
+
+///generaremos el webpack
+express --view=ejs kiminotodoke

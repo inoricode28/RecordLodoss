@@ -19,7 +19,7 @@ y guadas Ctrl+X y luegos yes
 --> Activar el servicio
 systemctl start sshd.service
 
---> Asignar un contrasenia alk root
+--> Asignar un contrasenia al root
 passwd
 y le escribes la contrasenia
 
@@ -27,10 +27,10 @@ y le escribes la contrasenia
 ip a
 
 --> Windows Cmder
-ssh root@192.168.1.173
+ssh root@192.168.1.189
 
 --> ingresas esto al windows
-ssh-keygen -f "C:\\Users\\Nova/.ssh/known_hosts" -R "192.168.1.167"
+ssh-keygen -f "C:\\Users\\Nova/.ssh/known_hosts" -R "192.168.1.189"
 
 
 --> ver los efivars en una instalacion limpia

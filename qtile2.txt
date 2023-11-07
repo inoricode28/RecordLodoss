@@ -1,0 +1,72 @@
+sudo pacman -S lightdm lightdm-gtk-greeter
+sudo vim /etc/lightdm/lightdm.conf
+
+-->retirar
+
+greeter-session=example-gtk-gnome
+
+//Cambiar asi
+greeter-session=lightdm-gtk-greeter
+
+//Habilitar la idm
+sudo systemctl enable lightdm.service
+
+
+instalar qtile
+sudo pacman -S qtile xterm code rofi which nitrogen
+
+sudo pacman -S ttf-dejavu ttf-liberation noto-fonts
+
+sudo pacman -S pavucontrol pamixer
+
+sudo pacman -S arandr udiskie ntfs-3g network-manager-applet
+
+sudo pacman -S volumeicon cbattion xorg-xinit base-devel git thunar ranger glib2 gvfs lxappearance  geeqie mpv
+
+sudo pacman -S picom
+sudo pacman -S alacritty
+sudo pacman -S screenkey //Permite ver lo que escribes en el teclado
+
+marcar la resolucion
+sh .screenlayout/resolucion.sh
+
+//crear el archivo autostart
+
+nano .config/qtile/autostart.sh
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+import os
+import subprocess
+from libqtile import hook
+
+Parte inicial del archivo .config/qtile/config.py
+================================================
+///////////////////////////////////////////////
+================================================
+
+Parte final del archivo .config/qtile/config.py
+
+@hook.subscribe.startup_once
+def autostart():
+    script = os.path.expanduser("~/.config/qtile/autostart.sh")
+    subprocess.run([script])
+
++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

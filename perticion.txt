@@ -1,0 +1,5 @@
+ Status | Device | Type    | Start    | End       | Size   | FS type | Mountpoint | Mount options | Flags
+  -------------------------------------------------------------------------------------------------------------
+  create |        | primary |     2048 |   1050624 | 536 MB | fat32   | /boot      |               | Boot, ESP
+> create |        | primary |  1050624 |  82993664 | 21 GB  | ext4    | /          |               |
+  create |        | primary | 81943040 | 167772160 | 64 GB  | ext4    | /home      |               |
