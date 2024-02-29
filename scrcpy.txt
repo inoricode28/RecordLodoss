@@ -1,0 +1,20 @@
+netsh wlan show profile name="nombre_red" key=clear
+
+
+
+Para obtener la dirección IP de un dispositivo Android mediante ADB (Android Debug Bridge), puedes utilizar el siguiente comando:
+adb shell ip addr show wlan0
+
+
+adb shell ifconfig
+
+adb devices --> permite ver si esta conectado un celular
+
+adb tcpip 5555 --> activa el servidor y seguido ejecutar el "scrcpy"
+
+adb connect 192.168.1.108:5555 --> crea un servidor visor tipo Vysor Pero Inalambricamente
+
+scrcpy --> Ejecuta el programa para visualizar el celular tipu Vysor
+
+adb kill-server --> Mata el servidor
+adb start-server --> Inicia el servidor
