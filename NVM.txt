@@ -1,0 +1,31 @@
+Listar versiones disponibles de Node.js para instalar:
+nvm ls-remote
+
+Instalar una versión específica de Node.js:
+nvm install <version>
+
+Por ejemplo:
+nvm install 14.17.0
+
+Listar versiones instaladas de Node.js:
+nvm ls
+
+Cambiar a una versión específica de Node.js:
+nvm use <version>
+
+Por ejemplo:
+nvm use 14.17.0
+
+Establecer una versión de Node.js predeterminada:
+nvm alias default <version>
+
+Por ejemplo:
+nvm alias default 14.17.0
+
+Desinstalar una versión específica de Node.js:
+nvm uninstall <version>
+
+Por ejemplo:
+nvm uninstall 14.17.0
+
+
