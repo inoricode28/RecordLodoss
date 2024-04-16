@@ -1,0 +1,29 @@
+Creacion de un Proyecto de react native
+
+npx react-native@lastest init war
+
+Ejecucion del proyecto en el emulado android
+npm run android
+
+Otra forma de ejecucion es
+npm start
+
+Ejecucion en windows que activar al metro
+npx react-native start
+
+en linux
+react-native start
+
+compilar tu proyecto a un apk
+
+gradlew assembleRelease  <-- compila tu proyecto aun APK OFICIAL
+
+nota: para ello dene estar en la carpeta "Android" de tu proyecto
+
+Donde encontar tu apk
+android\app\build\outputs\apk\release <-- en esta direccion encuentras el APK
+
+
+Librerias para guadado de informacion en el celular
+
+npm i @react-native-async-storage/async-storage
