@@ -1,0 +1,40 @@
+El mensaje "Not authorized to perform operation" indica que el usuario actual no tiene los permisos necesarios para montar el disco duro. Esto puede ocurrir por varias razones, pero generalmente se debe a la configuración de políticas de permisos en el sistema.
+
+Aquí hay algunas posibles soluciones que puedes probar:
+
+1- Montaje como superusuario: Intenta abrir Thunar como superusuario para ver si puedes montar el disco duro. Para hacerlo, abre una terminal y ejecuta el siguiente comando:
+
+sudo thunar
+
+Esto abrirá Thunar con privilegios de superusuario y podría permitirte montar el disco duro.
+
+2- Configuración de políticas de polkit: Asegúrate de que las políticas de polkit estén configuradas correctamente para permitir a tu usuario montar dispositivos. Puedes verificar el archivo de políticas relevante ejecutando:
+
+sudo nano /etc/polkit-1/rules.d/10-enable-mounting.rules
+
+Si no existe un archivo de reglas específico para el montaje, puedes crear uno y agregar las siguientes líneas:
+
+polkit.addRule(function(action, subject) {
+    if (action.id == "org.freedesktop.udisks2.filesystem-mount-system" ||
+        action.id == "org.freedesktop.udisks2.filesystem-mount" ||
+        action.id == "org.freedesktop.udisks2.encrypted-unlock" ||
+        action.id == "org.freedesktop.udisks2.encrypted-unlock-system" ||
+        action.id == "org.freedesktop.udisks2.encrypted-change-passphrase" ||
+        action.id == "org.freedesktop.udisks2.eject-media" ||
+        action.id == "org.freedesktop.udisks2.power-off-drive") {
+        return polkit.Result.YES;
+    }
+});
+
+
+Guarda el archivo y reinicia el sistema o reinicia el servicio de polkit para aplicar los cambios:
+
+sudo systemctl restart polkit.service
+
+3- Agregar al grupo storage: Asegúrate de que tu usuario esté en el grupo storage, que a menudo tiene permisos para montar y desmontar dispositivos de almacenamiento. Puedes agregar tu usuario al grupo storage ejecutando:
+
+sudo usermod -aG storage tu_usuario --> en caso mi usuario en nova
+
+Reemplaza tu_usuario con tu nombre de usuario en Arch Linux.
+
+Después de intentar estas soluciones, vuelve a intentar montar el disco duro en Thunar y verifica si el problema se ha resuelto. Si sigues experimentando problemas, podría ser necesario investigar más a fondo la configuración de permisos de tu sistema.
