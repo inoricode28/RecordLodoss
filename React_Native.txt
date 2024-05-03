@@ -1,3 +1,32 @@
+Instalaciond el chokolate en windows
+
+deberas abir un powershell con permisos de admisnistrador
+
+Correr este comando Get-ExecutionPolicy. Si retorna esto: Restricted, Entonces correr este otro comando Set-ExecutionPolicy AllSigned or Set-ExecutionPolicy Bypass -Scope Process.
+
+con esto eliminaras las restrigciones de instalacion del chokolate
+
+uns ves que se haya hecho el procesos normal
+
+digitar el siguiente comando al terminal o powershell
+
+Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+
+esto instalara el chokolate
+una ves instalado para verificar que esta instalado 
+
+digitamos: choco -?
+con este comando debe darte la version instalada en windows
+
+ahora abriremos un CMD con persmisos de admisnistrador
+
+digitaras el seiguiente comando:
+
+npm install -g react-native-cli
+
+estos intalara el react native en el ordenador
+
+
 Creacion de un Proyecto de react native
 
 npx react-native@lastest init war
