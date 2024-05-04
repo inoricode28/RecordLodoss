@@ -29,7 +29,7 @@ estos intalara el react native en el ordenador
 
 Creacion de un Proyecto de react native
 
-npx react-native@lastest init war
+npx react-native@lastest init Sakura
 
 Ejecucion del proyecto en el emulado android
 npm run android
