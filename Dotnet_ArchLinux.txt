@@ -1,0 +1,34 @@
+descargara el Script de instalacion
+wget https://dot.net/v1/dotnet-install.sh
+
+
+En la misma ruta del Script ejecutar la instalacion de Runtime
+sudo sh ./dotnet-install.sh --runtime dotnet --version 8.0.4 --install-dir /usr/share/dotnet
+
+Instalacion del SDK DOTNET
+
+sudo sh ./dotnet-install.sh --channel 8.0.2xx --install-dir /usr/share/dotnet
+
+/usr/share/dotnet --list-sdks
+
+
+
+Para poder llamar .NET desde la terminal en Arch Linux, necesitas agregar el directorio donde está instalado .NET a tu variable de entorno PATH. Aquí te muestro cómo puedes hacerlo:
+
+Abre el archivo de perfil de tu terminal. Dependiendo de tu shell, esto puede ser .bashrc, .bash_profile, .zshrc, o similar. Puedes usar un editor de texto como nano o vim para abrirlo. Por 
+ejemplo:
+
+nano ~/.bashrc
+Agrega la siguiente línea al final del archivo para agregar el directorio de instalación de .NET a tu PATH:
+
+--> export PATH="$PATH:/usr/share/dotnet"
+
+Asegúrate de reemplazar /usr/share/dotnet con la ubicación real donde has instalado .NET en tu sistema.
+
+Guarda y cierra el archivo. En nano, puedes hacerlo presionando Ctrl + O para guardar y Ctrl + X para salir.
+
+Recarga el perfil de tu terminal para aplicar los cambios. Esto puede variar dependiendo de tu terminal y configuración. Puedes cerrar y abrir la terminal nuevamente, o ejecutar el siguiente comando para recargar el archivo de perfil:
+
+source ~/.bashrc
+
+Después de realizar estos pasos, deberías poder llamar .NET desde la terminal simplemente escribiendo dotnet. Puedes verificar que la instalación se haya realizado correctamente ejecutando dotnet --version.
