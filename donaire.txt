@@ -1,0 +1,118 @@
+
+localhost:8088/semana02/personas --> GET -->listar personas
+
+
+localhost:8088/semana02/personas --> Post --> Grabar Persona
+
+{
+"nombres":"juan",
+"apellidos":"perez"
+}
+
+Paginacion
+
+//Te entrega una paginacion de 2 en 2 la cual el 0 viene a ser los dos primeros elementos
+localhost:8088/semana02/personas/pagina?page=0&size=2
+
+{
+    "totalElements": 6,
+    "totalPages": 3,
+    "size": 2,
+    "content": [
+        {
+            "idPersona": 1,
+            "nombres": "Ronald",
+            "apellidos": "Donayre"
+        },
+        {
+            "idPersona": 2,
+            "nombres": "Miguel",
+            "apellidos": "Chavez"
+        }
+    ],
+    "number": 0,
+    "sort": {
+        "empty": true,
+        "sorted": false,
+        "unsorted": true
+    },
+    "first": true,
+    "last": false,
+    "numberOfElements": 2,
+    "pageable": {
+        "pageNumber": 0,
+        "pageSize": 2,
+        "sort": {
+            "empty": true,
+            "sorted": false,
+            "unsorted": true
+        },
+        "offset": 0,
+        "paged": true,
+        "unpaged": false
+    },
+    "empty": false
+}
+
+
+
+Vamos ausar la forma de modificar con el verbo PUT
+
+localhost:8088/semana02/personas
+
+Cuerpo Actual:
+{
+    "idPersona": 2,
+    "nombres": "Miguel",
+    "apellidos": "Chavez"
+}
+
+Cuerpo Modificado:
+
+{
+    "idPersona":"2",
+    "nombres":"inori",
+    "apellidos":"kanarazu"
+}
+
+
+Metodo eliminar DELETE
+
+localhost:8088/semana02/personas/5
+
+y recives como respuesta un true
+
+//Semana 3
+
+--> Primer metodo buscar
+
+localhost:8088/semana02/personas/buscarNA?nombres=Miguel&apellidos=Chavez
+
+Donde los parametros a buscar deben coincidir en la base de datos
+
+--> Segundo metodo Listar
+
+localhost:8088/semana02/personas/listarHql?id=1
+
+Esta es una consulta Asql
+
+--> Tecer metodo Query nativo
+
+localhost:8088/semana02/personas/listarNativo
+
+cuarto metodo ejecutar la funcion en postgre o el procedimiento almacenado en mysql
+
+localhost:8088/semana02/personas/listarProc?id=3
+
+Esto esta ligado a el modulo 
+ 
+IPersonaDao
+//@Query(value = "Select * from fnc_listar(?1)", nativeQuery = true)  //Postgres
+//@Query(value = "call listaPersona(?1)", nativeQuery = true)  //MySQL
+
+
+
+
+
+
+
