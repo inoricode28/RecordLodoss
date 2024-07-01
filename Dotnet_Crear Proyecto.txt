@@ -1,0 +1,23 @@
+Crea un nuevo proyecto: Abre tu terminal o línea de comandos y ejecuta el siguiente comando para crear un nuevo proyecto de API en .NET:
+
+--> dotnet new webapi -o MiProyectoAPI
+----> cd MiProyectoAPI
+--------> dotnet run
+
+Instalar Swagger
+--> dotnet add package Swashbuckle.AspNetCore
+
+
+
+
+dotnet tool install --global dotnet-ef
+
+dotnet add package Microsoft.EntityFrameworkCore.Tools
+
+dotnet ef --version
+
+
+dotnet ef dbcontext scaffold "server=localhost;database=dbaltared;user id=nova;password=1234" MySql.EntityFrameworkCore -o Models
+
+
+dotnet ef dbcontext scaffold "server=localhost;database=dbaltared;user id=nova;password=1234" MySql.EntityFrameworkCore -o Models -c DbaltaredContext
