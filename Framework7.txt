@@ -1,0 +1,5 @@
+-->Iniciaremos la instalacion
+
+-->  npm i framework7-cli cordova -g
+
+-->  framework7 create --ui
