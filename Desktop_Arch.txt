@@ -1,8 +1,8 @@
 Instalacion de Arch Linux
 
 //Agrandar las letras
-/usr/share/kbd/condolefonts
-se instala con setfont ter-228b.psf.gx -v
+/usr/share/kbd/consolefonts
+se instala con setfont ter-228b.psf.gz -v
 
 Activas SSH en la iso de instalacion para hacerlo remotamente
 
@@ -31,6 +31,39 @@ ssh root@192.168.1.189
 
 --> ingresas esto al windows
 ssh-keygen -f "C:\\Users\\Nova/.ssh/known_hosts" -R "192.168.1.189"
+
+--> Usaremos ArchInstall
+
+--> archinstall --versión
+--> pacman -Sy archinstall
+
+Seguiremos Los pasos de ArchInstall
+
+
+
+ Archinstall language         English (100%)
+  Locales                      +
+  Mirrors and repositories
+  Disk configuration
+  Swap                         +
+  Bootloader                   +
+  Unified kernel images
+  Hostname                     +
+  Authentication
+  Profile
+  Applications
+  Kernels                      +
+  Network configuration
+  Additional packages
+  Timezone                     +
+  Automatic time sync (NTP)    +
+
+  Save configuration
+  Install
+  Abort
+
+
+
 
 
 --> ver los efivars en una instalacion limpia
