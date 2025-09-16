@@ -62,6 +62,15 @@ Seguiremos Los pasos de ArchInstall
   Install
   Abort
 
+Liberar el root para conexcion SSH
+
+https://www.youtube.com/watch?v=rN-AfLIo-KQ&t=103s
+-->nano /etc/ssh/sshd_config
+descomentar:
+PermiyRootLogin yes
+
+Arch
+-->systemctl restart sshd 
 
 
 
