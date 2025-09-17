@@ -73,8 +73,6 @@ Arch
 -->systemctl restart sshd 
 
 
-
-
 --> ver los efivars en una instalacion limpia
 ls /sys/firmware/efi/efivars
 
@@ -99,11 +97,25 @@ cd yay/
 
 makepkg -si
 
-yay --version
+yay --versión
+
+
+Instalaremos Programas Basicos
+
+Instalar El Navegador
+
+yay -S google-chrome
+
+
 
 
 ///Gestor de ejecucion de programas rofi
 sudo pacman -S rofi
+--> configurar el rofi
+--> carpeta de dirigirse
+--> /home/nova/.config/qtile/config.py
+ #Tecla para lanzar el Rofi
+ Key([mod], "m", lazy.spawn("rofi -show drun"), desc="Launch Rofi application launcher"),
 
 //falta sed
 sudo pacman -S sed
